@@ -2,6 +2,9 @@
 - master
   - New
     - Added audit logging functionality
+    - Added payload/response deltas
+    - Minimized terminal output
+    - Added the `-summary` flag and run statistics
   - Changed
     - Fix a bug in autocalibration strategy merging, when two files have the same strategy key
     - Fix panic when setting rate to 0 in the interactive console
