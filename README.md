@@ -1,5 +1,16 @@
 ![ffuf mascot](_img/ffuf_run_logo_600.png)
-# ffuf - Fuzz Faster U Fool
+# ffuf - Fuzz Faster U Fool - DoI's Fork
+
+This repository contains a fork of FFUF with various additional features and fixes, mostly to improve FFUF's capabilities as a web application vulnerability hunting tool. So far, changes include:
+
+- Fuzz run summary statistics with `-summary`
+- Full request/response audit logging with `-audit-log` - This produces a JSONlines file with the configuration and every request/response sent/recieved by FFUF, regardless of filter settings
+- Payload/Response Delta values in run summaries - The Δ value shows the `response size - payload size`, a handy output for finding input reflection and XSS vulnerabilities
+- Fixes to HTTP header handling, allowing setting lower-case headers and the same header multiple times
+
+To use, `git clone` this repository and run `go build`.
+
+Original readme continues below...
 
 A fast web fuzzer written in Go.
 
