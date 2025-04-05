@@ -10,7 +10,7 @@ type Request struct {
 	Method    string
 	Host      string
 	Url       string
-	Headers   map[string]string
+	Headers   map[string][]string
 	Data      []byte
 	Input     map[string][]byte
 	Position  int
