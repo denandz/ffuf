@@ -1,4 +1,4 @@
-![ffuf mascot](_img/ffuf_run_logo_600.png)
+![ffuf mascot](_img/ffuf_ansi1.png)
 # ffuf - Fuzz Faster U Fool - DoI's Fork
 
 This repository contains a fork of FFUF with various additional features and fixes, mostly to improve FFUF's capabilities as a web application vulnerability hunting tool. So far, changes include:
