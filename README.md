@@ -7,6 +7,7 @@ This repository contains a fork of FFUF with various additional features and fix
 - Full request/response audit logging with `-audit-log` - This produces a JSONlines file with the configuration and every request/response sent/recieved by FFUF, regardless of filter settings
 - Payload/Response Delta values in run summaries - The Δ value shows the `response size - payload size`, a handy output for finding input reflection and XSS vulnerabilities
 - Fixes to HTTP header handling, allowing setting lower-case headers and the same header multiple times
+- Default thread count reduced to 5 to improve timing analysis in the default configuration
 
 To use, `git clone` this repository and run `go build`.
 
