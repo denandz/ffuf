@@ -143,7 +143,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.General.StopOn403 = false
 	c.General.StopOnAll = false
 	c.General.StopOnErrors = false
-	c.General.Threads = 5
+	c.General.Threads = 1
 	c.General.Verbose = false
 	c.HTTP.Data = ""
 	c.HTTP.FollowRedirects = false
@@ -155,7 +155,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.HTTP.RecursionDepth = 0
 	c.HTTP.RecursionStrategy = "default"
 	c.HTTP.ReplayProxyURL = ""
-	c.HTTP.Timeout = 10
+	c.HTTP.Timeout = 30
 	c.HTTP.SNI = ""
 	c.HTTP.URL = ""
 	c.HTTP.Http2 = false
