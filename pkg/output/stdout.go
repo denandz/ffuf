@@ -346,6 +346,7 @@ func (s *Stdoutput) Result(resp ffuf.Response) {
 		Duration:             resp.Duration,
 		ResultFile:           resp.ResultFile,
 		Host:                 resp.Request.Host,
+		Reflection:           resp.HasReflection(),
 	}
 	s.CurrentResults = append(s.CurrentResults, sResult)
 	// Output the result
@@ -391,6 +392,17 @@ func (s *Stdoutput) PrintResult(res ffuf.Result) {
 	}
 }
 
+func (s *Stdoutput) reflectionEmoji(res ffuf.Result) string {
+	switch res.Reflection {
+	case ffuf.ReflectionVerbatim:
+		return "🪞 "
+	case ffuf.ReflectionPartial:
+		return ""
+	default:
+		return ""
+	}
+}
+
 func (s *Stdoutput) prepareInputsOneLine(res ffuf.Result) string {
 	inputs := ""
 	if len(s.fuzzkeywords) > 1 {
@@ -422,7 +434,7 @@ func (s *Stdoutput) resultQuiet(res ffuf.Result) {
 func (s *Stdoutput) resultMultiline(res ffuf.Result) {
 	var res_hdr, res_str string
 	res_str = "%s%s    * %s: %s\n"
-	res_hdr = fmt.Sprintf("%s%s[Status: %d, Size: %d, Words: %d, Lines: %d, Duration: %dms]%s", TERMINAL_CLEAR_LINE, s.colorize(res.StatusCode), res.StatusCode, res.ContentLength, res.ContentWords, res.ContentLines, res.Duration.Milliseconds(), ANSI_CLEAR)
+	res_hdr = fmt.Sprintf("%s%s[Status: %d, Size: %d, Words: %d, Lines: %d, Duration: %dms]%s%s", TERMINAL_CLEAR_LINE, s.colorize(res.StatusCode), res.StatusCode, res.ContentLength, res.ContentWords, res.ContentLines, res.Duration.Milliseconds(), s.reflectionEmoji(res), ANSI_CLEAR)
 	reslines := ""
 	if s.config.Verbose {
 		reslines = fmt.Sprintf("%s%s| URL | %s\n", reslines, TERMINAL_CLEAR_LINE, res.Url)
@@ -455,7 +467,7 @@ func (s *Stdoutput) resultMultiline(res ffuf.Result) {
 }
 
 func (s *Stdoutput) resultNormal(res ffuf.Result) {
-	resnormal := fmt.Sprintf("%s%s[Status: %d, Size: %d, Δ: %d, Duration: %dms] %-23s%s", TERMINAL_CLEAR_LINE, s.colorize(res.StatusCode), res.StatusCode, res.ContentLength, res.PayloadResponseDelta, res.Duration.Milliseconds(), s.prepareInputsOneLine(res), ANSI_CLEAR)
+	resnormal := fmt.Sprintf("%s%s[Status: %d, Size: %d, Δ: %d, Duration: %dms] %s %-23s%s", TERMINAL_CLEAR_LINE, s.colorize(res.StatusCode), res.StatusCode, res.ContentLength, res.PayloadResponseDelta, res.Duration.Milliseconds(), s.reflectionEmoji(res), s.prepareInputsOneLine(res), ANSI_CLEAR)
 	fmt.Println(resnormal)
 }
 

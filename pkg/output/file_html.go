@@ -26,6 +26,7 @@ type htmlResult struct {
 	Host                 string
 	HTMLColor            string
 	FfufHash             string
+	Reflection           string
 }
 
 type htmlFileOutput struct {
@@ -85,7 +86,7 @@ const (
    <table id="ffufreport">
         <thead>
         <div style="display:none">
-|result_raw|StatusCode{{ range $keyword := .Keys }}|{{ $keyword | printf "%s" }}{{ end }}|Url|RedirectLocation|Position|ContentLength|ContentWords|ContentLines|ContentType|Duration|Resultfile|ScraperData|FfufHash|
+|result_raw|StatusCode{{ range $keyword := .Keys }}|{{ $keyword | printf "%s" }}{{ end }}|Url|RedirectLocation|Position|ContentLength|ContentWords|ContentLines|ContentType|Duration|Resultfile|ScraperData|Reflection|FfufHash|
         </div>
           <tr>
               <th>Status</th>
@@ -101,6 +102,7 @@ const (
               <th>Duration</th>
 			  <th>Resultfile</th>
               <th>Scraper data</th>
+              <th>Reflection</th>
               <th>Ffuf Hash</th>
           </tr>
         </thead>
@@ -108,7 +110,7 @@ const (
         <tbody>
 			{{range $result := .Results}}
                 <div style="display:none">
-|result_raw|{{ $result.StatusCode }}{{ range $keyword, $value := $result.Input }}|{{ $value | printf "%s" }}{{ end }}|{{ $result.Url }}|{{ $result.RedirectLocation }}|{{ $result.Position }}|{{ $result.ContentLength }}|{{ $result.ContentWords }}|{{ $result.ContentLines }}|{{ $result.ContentType }}|{{ $result.PayloadResponseDelta }}|{{ $result.Duration }}|{{ $result.ResultFile }}|{{ $result.ScraperData }}|{{ $result.FfufHash }}|
+|result_raw|{{ $result.StatusCode }}{{ range $keyword, $value := $result.Input }}|{{ $value | printf "%s" }}{{ end }}|{{ $result.Url }}|{{ $result.RedirectLocation }}|{{ $result.Position }}|{{ $result.ContentLength }}|{{ $result.ContentWords }}|{{ $result.ContentLines }}|{{ $result.ContentType }}|{{ $result.PayloadResponseDelta }}|{{ $result.Duration }}|{{ $result.ResultFile }}|{{ $result.ScraperData }}|{{ $result.Reflection }}|{{ $result.FfufHash }}|
                 </div>
                 <tr class="result-{{ $result.StatusCode }}" style="background-color: {{ $result.HTMLColor }};">
                     <td><font color="black" class="status-code">{{ $result.StatusCode }}</font></td>
@@ -125,7 +127,8 @@ const (
 					<td>{{ $result.PayloadResponseDelta }}</td>
 					<td>{{ $result.Duration }}</td>
                     <td>{{ $result.ResultFile }}</td>
-					<td>{{ $result.ScraperData }}</td>
+                    <td>{{ $result.ScraperData }}</td>
+					<td>{{ $result.Reflection }}</td>
 					<td>{{ $result.FfufHash }}</td>
                 </tr>
             {{ end }}
@@ -256,6 +259,7 @@ func writeHTML(filename string, config *ffuf.Config, results []ffuf.Result) erro
 			Host:                 r.Host,
 			HTMLColor:            r.HTMLColor,
 			FfufHash:             ffufhash,
+			Reflection:           string(r.Reflection),
 		}
 		htmlResults = append(htmlResults, hres)
 	}

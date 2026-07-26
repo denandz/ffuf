@@ -6,6 +6,7 @@ import (
 	"github.com/NimbleMarkets/ntcharts/linechart"
 	"github.com/ffuf/ffuf/v2/pkg/ffuf"
 	"golang.org/x/term"
+	"math"
 	"slices"
 	"strconv"
 )
@@ -98,6 +99,8 @@ func (s *Stdoutput) PrintSummary(r []ffuf.ResponseStatistics) {
 		var minDuration int64
 		var maxDuration int64
 		var sumDuration int64
+		var sumInput int64
+		var inputLengths []int64
 
 		minLength = r[0].ContentLength
 		minDuration = r[0].Duration.Milliseconds()
@@ -121,6 +124,15 @@ func (s *Stdoutput) PrintSummary(r []ffuf.ResponseStatistics) {
 			lengths[v.ContentLength]++
 			sumLength += v.ContentLength
 
+			il := int64(0)
+			for k, val := range v.Input {
+				if k != "FFUFHASH" {
+					il += int64(len(val))
+				}
+			}
+			inputLengths = append(inputLengths, il)
+			sumInput += il
+
 			if v.ContentLength < minLength {
 				minLength = v.ContentLength
 			}
@@ -137,7 +149,7 @@ func (s *Stdoutput) PrintSummary(r []ffuf.ResponseStatistics) {
 		fmt.Printf("\n")
 
 		fmt.Printf("== Response Lengths (bytes) ==\n")
-		if len(lengths) < 10 { // less than 10 distinct content lengths, just print the counts
+		if len(lengths) < 5 { // less than 5 distinct content lengths, just print the counts
 			fmt.Printf("Len\tCount\n")
 			for k, v := range lengths {
 				fmt.Printf("%d\t%d\n", k, v)
@@ -152,6 +164,28 @@ func (s *Stdoutput) PrintSummary(r []ffuf.ResponseStatistics) {
 			fmt.Printf("Unique Content Lengths: %d\n", len(lengths))
 			fmt.Printf("Median: %d Mean: %.2f Min/Max: %d:%d\n", contentLengths[len(r)/2], float64(sumLength)/float64(len(r)), minLength, maxLength)
 			s.printBoxPlot(40, minLength, contentLengths[len(r)/4], contentLengths[len(r)/2], contentLengths[(len(r)/4)*3], maxLength)
+
+			// calculate the pearson correlation between payload length and response
+			meanInput := float64(sumInput) / float64(len(r))
+			meanContent := float64(sumLength) / float64(len(r))
+			var cov float64
+			var varInput float64
+			var varContent float64
+			for i, v := range r {
+				dxi := float64(inputLengths[i]) - meanInput
+				dyi := float64(v.ContentLength) - meanContent
+				cov += dxi * dyi
+				varInput += dxi * dxi
+				varContent += dyi * dyi
+			}
+			n := float64(len(r))
+			cov /= n
+			varInput /= n
+			varContent /= n
+			if varInput > 0 && varContent > 0 {
+				pearsonR := cov / (math.Sqrt(varInput) * math.Sqrt(varContent))
+				fmt.Printf("Pearson correlation (payload-len/response-len)  r: %.4f\n", pearsonR)
+			}
 		}
 
 		slices.Sort(durations)

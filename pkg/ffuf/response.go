@@ -1,6 +1,7 @@
 package ffuf
 
 import (
+	"bytes"
 	"net/http"
 	"net/url"
 	"time"
@@ -88,6 +89,20 @@ func getUrlPort(url *url.URL) string {
 		p = portMap[url.Scheme]
 	}
 	return p
+}
+
+// HasReflection checks if any input payload longer than minReflectionLen
+// appears verbatim in the response body
+func (resp *Response) HasReflection() ReflectionType {
+	if resp.Request == nil || resp.Cancelled {
+		return ReflectionNone
+	}
+	for _, v := range resp.Request.Input {
+		if len(v) > minReflectionLen && bytes.Contains(resp.Data, v) {
+			return ReflectionVerbatim
+		}
+	}
+	return ReflectionNone
 }
 
 func NewResponse(httpresp *http.Response, req *Request) Response {

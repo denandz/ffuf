@@ -99,6 +99,16 @@ type ScraperResult struct {
 	Results []string `json:"results"`
 }
 
+type ReflectionType string
+
+const (
+	ReflectionNone     ReflectionType = ""
+	ReflectionVerbatim ReflectionType = "verbatim"
+	ReflectionPartial  ReflectionType = "partial"
+)
+
+const minReflectionLen = 10
+
 type Result struct {
 	Input                map[string][]byte   `json:"input"`
 	Position             int                 `json:"position"`
@@ -115,4 +125,5 @@ type Result struct {
 	ResultFile           string              `json:"resultfile"`
 	Host                 string              `json:"host"`
 	HTMLColor            string              `json:"-"`
+	Reflection           ReflectionType      `json:"reflection"`
 }

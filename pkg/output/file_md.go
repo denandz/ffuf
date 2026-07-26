@@ -14,9 +14,9 @@ const (
   Command line : ` + "`{{.CommandLine}}`" + `
   Time: ` + "{{ .Time }}" + `
 
-  {{ range .Keys }}| {{ . }} {{ end }}| URL | Redirectlocation | Position | Status Code | Content Length | Content Words | Content Lines | Content Type | Payload Response Delta | Duration | ResultFile | ScraperData | Ffufhash
-  {{ range .Keys }}| :- {{ end }} | ---- | ---------------- | -------- | ----------- | -------------- | -------------- | ------------- | ------------------------ | ------------ | ------------- | ----------- | -------- | -------- |
-  {{range .Results}}{{ range $keyword, $value := .Input }}| {{ $value | printf "%s" }} {{ end }}| {{ .Url }} | {{ .RedirectLocation }} | {{ .Position }} | {{ .StatusCode }} | {{ .ContentLength }} | {{ .ContentWords }} | {{ .ContentLines }} | {{ .ContentType }} | {{.PayloadResponseDelta}} | {{ .Duration}} | {{ .ResultFile }} | {{ .ScraperData }} | {{ .FfufHash }}
+  {{ range .Keys }}| {{ . }} {{ end }}| URL | Redirectlocation | Position | Status Code | Content Length | Content Words | Content Lines | Content Type | Payload Response Delta | Duration | ResultFile | ScraperData | Reflection | Ffufhash
+  {{ range .Keys }}| :- {{ end }} | ---- | ---------------- | -------- | ----------- | -------------- | -------------- | ------------- | ------------------------ | ------------ | ------------- | ----------- | ---------- | ----------- | -------- |
+  {{range .Results}}{{ range $keyword, $value := .Input }}| {{ $value | printf "%s" }} {{ end }}| {{ .Url }} | {{ .RedirectLocation }} | {{ .Position }} | {{ .StatusCode }} | {{ .ContentLength }} | {{ .ContentWords }} | {{ .ContentLines }} | {{ .ContentType }} | {{.PayloadResponseDelta}} | {{ .Duration}} | {{ .ResultFile }} | {{ .ScraperData }} | {{ .Reflection }} | {{ .FfufHash }}
   {{end}}` // The template format is not pretty but follows the markdown guide
 )
 
@@ -71,6 +71,7 @@ func writeMarkdown(filename string, config *ffuf.Config, results []ffuf.Result) 
 			Url:                  r.Url,
 			Host:                 r.Host,
 			FfufHash:             ffufhash,
+			Reflection:           string(r.Reflection),
 		}
 		htmlResults = append(htmlResults, hres)
 	}

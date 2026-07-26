@@ -16,20 +16,21 @@ type ejsonFileOutput struct {
 }
 
 type JsonResult struct {
-	Input                map[string]string   `json:"input"`
-	Position             int                 `json:"position"`
-	StatusCode           int64               `json:"status"`
-	ContentLength        int64               `json:"length"`
-	ContentWords         int64               `json:"words"`
-	ContentLines         int64               `json:"lines"`
-	ContentType          string              `json:"content-type"`
-	PayloadResponseDelta int64               `json:"payload-response-delta"`
-	RedirectLocation     string              `json:"redirectlocation"`
-	ScraperData          map[string][]string `json:"scraper"`
-	Duration             time.Duration       `json:"duration"`
-	ResultFile           string              `json:"resultfile"`
-	Url                  string              `json:"url"`
-	Host                 string              `json:"host"`
+	Input                map[string]string    `json:"input"`
+	Position             int                  `json:"position"`
+	StatusCode           int64                `json:"status"`
+	ContentLength        int64                `json:"length"`
+	ContentWords         int64                `json:"words"`
+	ContentLines         int64                `json:"lines"`
+	ContentType          string               `json:"content-type"`
+	PayloadResponseDelta int64                `json:"payload-response-delta"`
+	RedirectLocation     string               `json:"redirectlocation"`
+	ScraperData          map[string][]string  `json:"scraper"`
+	Duration             time.Duration        `json:"duration"`
+	ResultFile           string               `json:"resultfile"`
+	Url                  string               `json:"url"`
+	Host                 string               `json:"host"`
+	Reflection           ffuf.ReflectionType  `json:"reflection"`
 }
 
 type jsonFileOutput struct {
@@ -81,6 +82,7 @@ func writeJSON(filename string, config *ffuf.Config, res []ffuf.Result) error {
 			ResultFile:           r.ResultFile,
 			Url:                  r.Url,
 			Host:                 r.Host,
+			Reflection:           r.Reflection,
 		})
 	}
 	outJSON := jsonFileOutput{

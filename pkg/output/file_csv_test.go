@@ -10,19 +10,19 @@ import (
 
 func TestToCSV(t *testing.T) {
 	result := ffuf.Result{
-		Input:            map[string][]byte{"x": {66}, "FFUFHASH": {65}},
-		Position:         1,
-		StatusCode:       200,
-		ContentLength:    3,
-		ContentWords:     4,
-		ContentLines:     5,
-		ContentType:      "application/json",
-        PayloadResponseDelta: 1,
-		RedirectLocation: "http://no.pe",
-		Url:              "http://as.df",
-		Duration:         time.Duration(123),
-		ResultFile:       "resultfile",
-		Host:             "host",
+		Input:                map[string][]byte{"x": {66}, "FFUFHASH": {65}},
+		Position:             1,
+		StatusCode:           200,
+		ContentLength:        3,
+		ContentWords:         4,
+		ContentLines:         5,
+		ContentType:          "application/json",
+		PayloadResponseDelta: 1,
+		RedirectLocation:     "http://no.pe",
+		Url:                  "http://as.df",
+		Duration:             time.Duration(123),
+		ResultFile:           "resultfile",
+		Host:                 "host",
 	}
 
 	csv := toCSV(result)
@@ -37,9 +37,10 @@ func TestToCSV(t *testing.T) {
 		"4",
 		"5",
 		"application/json",
-        "1",
+		"1",
 		"123ns",
 		"resultfile",
+		"",
 		"A"}) {
 		t.Errorf("CSV was not generated in expected format")
 	}
